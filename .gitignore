@@ -1,0 +1,26 @@
+# System
+node_modules
+.DS_Store
+Thumbs.db
+*.log
+*.exe
+*.dat
+*.blf
+*.regtrans-ms
+
+# User home dirs / dotfiles
+.*/
+.*
+AppData/
+Cisco Packet Tracer 9.0.0/
+VirtualBox VMs/
+app-creditos/
+my-app/
+open-design/
+rockylinux10svm0/
+ntuser*
+NTUSER*
+edb_*
+pemhttpd.exe
+postgis*
+postgresql*

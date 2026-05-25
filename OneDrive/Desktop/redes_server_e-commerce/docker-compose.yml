@@ -1,0 +1,112 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ecommerce-db
+    restart: always
+    environment:
+      POSTGRES_USER: ecommerce
+      POSTGRES_PASSWORD: ecommerce123
+      POSTGRES_DB: ecommerce
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./migration.sql:/docker-entrypoint-initdb.d/migration.sql
+    networks:
+      - ecommerce-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecommerce -d ecommerce"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://ecommerce:ecommerce123@postgres:5432/ecommerce
+      JWT_SECRET: super-secret-key-cambiar-en-produccion
+      PORT: 3001
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ecommerce-net
+
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    restart: always
+    ports:
+      - "3002:3002"
+    environment:
+      DATABASE_URL: postgresql://ecommerce:ecommerce123@postgres:5432/ecommerce
+      JWT_SECRET: super-secret-key-cambiar-en-produccion
+      PORT: 3002
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ecommerce-net
+
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    restart: always
+    ports:
+      - "3003:3003"
+    environment:
+      DATABASE_URL: postgresql://ecommerce:ecommerce123@postgres:5432/ecommerce
+      JWT_SECRET: super-secret-key-cambiar-en-produccion
+      PORT: 3003
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ecommerce-net
+
+  report-service:
+    build: ./report-service
+    container_name: report-service
+    restart: always
+    ports:
+      - "3004:3004"
+    environment:
+      DATABASE_URL: postgresql://ecommerce:ecommerce123@postgres:5432/ecommerce
+      JWT_SECRET: super-secret-key-cambiar-en-produccion
+      PORT: 3004
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ecommerce-net
+
+  carousel-service:
+    build: ./carousel-service
+    container_name: carousel-service
+    restart: always
+    ports:
+      - "3005:3005"
+    environment:
+      DATABASE_URL: postgresql://ecommerce:ecommerce123@postgres:5432/ecommerce
+      JWT_SECRET: super-secret-key-cambiar-en-produccion
+      PORT: 3005
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ecommerce-net
+    volumes:
+      - carousel_uploads:/app/uploads
+
+volumes:
+  pgdata:
+  carousel_uploads:
+
+networks:
+  ecommerce-net:
+    driver: bridge
