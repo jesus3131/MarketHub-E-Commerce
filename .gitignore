@@ -1,0 +1,27 @@
+# Node dependencies
+**/node_modules/
+
+# Build output
+frontend/dist/
+
+# Runtime logs
+.runtime/
+*.log
+
+# VS Code settings
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+*.env
+
+# npm package lock
+package-lock.json
+
+# Other temp
+*.tmp
+*.swp
+*.swo
